@@ -10,6 +10,9 @@ import { ComputedRef } from 'vue';
 const history = useHistoryStore();
 const msg = ref('');
 
+const URL = '172.16.75.141';
+// const URL = 'mechat.westlake.ink'
+
 function guid(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
@@ -29,22 +32,18 @@ const sendSeekerMsg = () => {
     const seekerData = {
       owner: 'seeker',
       msg: msg.value,
-      thumb_up: false,
-      thumb_down: false,
       unique_id: UNIQUE_ID,
     };
 
     history.addItem(seekerData);
     msg.value = '';
 
-    axios
-      .post('http://172.16.75.141:8002/v1/chat', seekerData)
-      .then((res: any) => {
-        console.log(res);
-        if (res.data.responseCode === 200) {
-          history.addItem(res.data.item);
-        }
-      });
+    axios.post(`http://${URL}:8002/v1/chat`, seekerData).then((res: any) => {
+      // console.log(res);
+      if (res.data.responseCode === 200) {
+        history.addItem(res.data.item);
+      }
+    });
   }
 };
 </script>

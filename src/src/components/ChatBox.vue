@@ -8,24 +8,30 @@ const history = useHistoryStore();
 
 const supporterAvatar = '/images/1.png';
 const seekerAvatar = '/images/2.png';
+const URL = '172.16.75.141';
+// const URL = 'mechat.westlake.ink'
+
+interface RatingMsgItem {
+  unique_id: string;
+  thumb_up?: boolean;
+  thumb_down?: boolean;
+  idx: number;
+}
 
 // 点赞和踩赞请求
 const handleRating = (item: any, key: string, idx: number) => {
   item[key] = true;
-  const data = {
-    thumb_up: item['thumb_up'],
-    thumb_down: item['thumb_down'],
+  const data: RatingMsgItem = {
+    [key]: true,
     unique_id: item['unique_id'],
     idx: idx,
   };
   // 向后端提交点赞和踩赞的状态更新
-  axios
-    .post('https://172.16.75.141:8002/v1/evaluation', data)
-    .then((res: any) => {
-      if (res.data.responseCode != 201) {
-        Toast.fail('网络异常，评论失败。');
-      }
-    });
+  axios.post(`http://${URL}:8002/v1/eval`, data).then((res: any) => {
+    if (res.data.responseCode != 200) {
+      Toast.fail('网络异常，评论失败。');
+    }
+  });
 };
 </script>
 
