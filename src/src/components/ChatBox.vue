@@ -8,8 +8,8 @@ const history = useHistoryStore();
 
 const supporterAvatar = '/images/1.png';
 const seekerAvatar = '/images/2.png';
-const URL = '172.16.75.141';
-// const URL = 'mechat.westlake.ink'
+// const URL = '172.16.75.141:8002';
+const URL = 'mechat.westlake.ink:6001';
 
 interface RatingMsgItem {
   unique_id: string;
@@ -27,7 +27,7 @@ const handleRating = (item: any, key: string, idx: number) => {
     idx: idx,
   };
   // 向后端提交点赞和踩赞的状态更新
-  axios.post(`http://${URL}:8002/v1/eval`, data).then((res: any) => {
+  axios.post(`http://${URL}/v1/eval`, data).then((res: any) => {
     if (res.data.responseCode != 200) {
       Toast.fail('网络异常，评论失败。');
     }

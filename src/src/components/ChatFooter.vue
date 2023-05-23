@@ -10,8 +10,8 @@ import { ComputedRef } from 'vue';
 const history = useHistoryStore();
 const msg = ref('');
 
-const URL = '172.16.75.141';
-// const URL = 'mechat.westlake.ink'
+// const URL = '172.16.75.141:8002';
+const URL = 'mechat.westlake.ink:6001';
 
 function guid(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -38,7 +38,7 @@ const sendSeekerMsg = () => {
     history.addItem(seekerData);
     msg.value = '';
 
-    axios.post(`http://${URL}:8002/v1/chat`, seekerData).then((res: any) => {
+    axios.post(`http://${URL}/v1/chat`, seekerData).then((res: any) => {
       // console.log(res);
       if (res.data.responseCode === 200) {
         history.addItem(res.data.item);

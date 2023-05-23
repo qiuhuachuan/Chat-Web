@@ -2,12 +2,12 @@
 
 <template>
   <div class="chat-header">
-    If you like us, star us.
     <a
       href="https://github.com/qiuhuachuan/smile"
       target="_blank"
       rel="noopener noreferrer"
-      ><svg
+      >If you like us, star us. ❤️
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
