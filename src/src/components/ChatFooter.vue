@@ -31,7 +31,7 @@ const sendSeekerMsg = () => {
     // 向后端发送请求的数据
     const seekerData = {
       owner: 'seeker',
-      msg: msg.value,
+      msg: msg.value.trim(),
       unique_id: UNIQUE_ID,
     };
 
@@ -53,6 +53,7 @@ const sendSeekerMsg = () => {
     <div class="chat-footer-inner">
       <VantField
         v-model="msg"
+        @keydown.enter.prevent="sendSeekerMsg"
         class="seeker-input"
         rows="1"
         type="textarea"
@@ -69,7 +70,7 @@ const sendSeekerMsg = () => {
       ></VantButton>
     </div>
   </div>
-  <div class="footnote">@2023 Zhejiang University & Westlake University</div>
+  <div class="footnote">@2023 Deep Learning Lab at Westlake University</div>
 </template>
 
 <style scoped>
