@@ -10,4 +10,9 @@ import Chat from './components/Chat.vue';
 .chat {
   height: 100vh;
 }
+@media only screen and (max-width: 767px) {
+  .chat {
+    height: 90vh;
+  }
+}
 </style>

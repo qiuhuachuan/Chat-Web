@@ -70,7 +70,7 @@ const sendSeekerMsg = () => {
       ></VantButton>
     </div>
   </div>
-  <div class="footnote">@2023 Deep Learning Lab at Westlake University</div>
+  <div class="footnote">@2023 Deep Learning Lab at WU & ZJU (version:1.0)</div>
 </template>
 
 <style scoped>
@@ -82,7 +82,7 @@ const sendSeekerMsg = () => {
 }
 
 .seeker-input {
-  margin: 5px;
+  margin: 5px 0 0 5px;
   border-radius: 22px;
   max-height: 40px;
   overflow-y: auto;
@@ -91,11 +91,11 @@ const sendSeekerMsg = () => {
   font-size: 14px;
   color: #000;
   width: 80px;
-  margin: 5px;
+  margin: 5px 0 0 5px;
   background-color: #17e6b9;
 }
 .footnote {
-  font-size: 15px;
+  font-size: 12px;
   margin: auto;
   text-align: center;
   margin-bottom: 5px;

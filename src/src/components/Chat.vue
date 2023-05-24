@@ -40,9 +40,12 @@ watch(() => history.rawItems.length, updateChatBox, { flush: 'post' });
   flex-direction: column;
   width: 100%;
   height: inherit;
+  max-width: 500px;
+  padding: auto;
+  margin: auto;
   .sub-chat-header {
     height: 30px;
-    line-height: 20px;
+    line-height: 30px;
     text-align: right;
     background-color: #ffffff;
     font-size: 14px;
@@ -50,16 +53,22 @@ watch(() => history.rawItems.length, updateChatBox, { flush: 'post' });
     padding-right: 60px;
   }
   .sub-chat-box {
-    height: 100%;
+    height: auto;
     background-color: #eee;
     flex: 1;
     width: 100%;
-    overflow: auto;
+    overflow-y: scroll;
   }
   .sub-chat-footer {
     background-color: #ccc;
     font-size: 30px;
     flex-shrink: 0;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .container {
+    max-width: 100%;
+    padding: 0 10px;
   }
 }
 </style>
