@@ -1,8 +1,8 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 // import { useUserStore } from './user';
 interface Message {
-  owner: string;
-  msg: string;
+  role: string;
+  content: string;
   thumb_up?: boolean;
   thumb_down?: boolean;
   unique_id: string;

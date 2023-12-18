@@ -8,9 +8,8 @@ import { useHistoryStore } from '../stores/history';
 import { ComputedRef } from 'vue';
 
 const history = useHistoryStore();
-const msg = ref('');
+const content = ref('');
 
-// const URL = '172.16.75.141:8002';
 const URL = 'mechat.westlake.ink:6001';
 
 function guid(): string {
@@ -22,23 +21,23 @@ function guid(): string {
 }
 
 // 发送按钮是否可用
-let sendAvailable: ComputedRef<boolean> = computed(() => !msg.value.trim());
+let sendAvailable: ComputedRef<boolean> = computed(() => !content.value.trim());
 const UNIQUE_ID = guid();
 
 // 消息发送请求
-const sendSeekerMsg = () => {
+const sendClientContent = () => {
   if (sendAvailable) {
     // 向后端发送请求的数据
-    const seekerData = {
-      owner: 'seeker',
-      msg: msg.value.trim(),
+    const clientData = {
+      role: 'client',
+      content: content.value.trim(),
       unique_id: UNIQUE_ID,
     };
 
-    history.addItem(seekerData);
-    msg.value = '';
+    history.addItem(clientData);
+    content.value = '';
 
-    axios.post(`http://${URL}/v1/chat`, seekerData).then((res: any) => {
+    axios.post(`http://${URL}/v1/chat`, clientData).then((res: any) => {
       // console.log(res);
       if (res.data.responseCode === 200) {
         history.addItem(res.data.item);
@@ -52,9 +51,9 @@ const sendSeekerMsg = () => {
   <div class="chat-footer-outer van-hairline--top">
     <div class="chat-footer-inner">
       <VantField
-        v-model="msg"
-        @keydown.enter.prevent="sendSeekerMsg"
-        class="seeker-input"
+        v-model="content"
+        @keydown.enter.prevent="sendClientContent"
+        class="client-input"
         rows="1"
         type="textarea"
         placeholder="和我聊聊心事吧"
@@ -64,13 +63,13 @@ const sendSeekerMsg = () => {
       <VantButton
         text="发送"
         round
-        class="seeker-button"
-        @click="sendSeekerMsg"
+        class="client-button"
+        @click="sendClientContent"
         :disabled="sendAvailable"
       ></VantButton>
     </div>
   </div>
-  <div class="footnote">@2023 Deep Learning Lab at WU & ZJU (version:1.0)</div>
+  <div class="footnote">@2023 西湖大学深度学习实验室</div>
 </template>
 
 <style scoped>
@@ -81,13 +80,13 @@ const sendSeekerMsg = () => {
   margin-bottom: 10px;
 }
 
-.seeker-input {
+.client-input {
   margin: 5px 0 0 5px;
   border-radius: 22px;
   max-height: 40px;
   overflow-y: auto;
 }
-.seeker-button {
+.client-button {
   font-size: 14px;
   color: #000;
   width: 80px;

@@ -6,12 +6,12 @@ import { useHistoryStore } from '../stores/history';
 
 const history = useHistoryStore();
 
-const supporterAvatar = '/images/1.png';
-const seekerAvatar = '/images/2.png';
+const counselorAvatar = '/images/1.png';
+const clientAvatar = '/images/2.png';
 // const URL = '172.16.75.141:8002';
 const URL = 'mechat.westlake.ink:6001';
 
-interface RatingMsgItem {
+interface RatingContentItem {
   unique_id: string;
   thumb_up?: boolean;
   thumb_down?: boolean;
@@ -21,7 +21,7 @@ interface RatingMsgItem {
 // 点赞和踩赞请求
 const handleRating = (item: any, key: string, idx: number) => {
   item[key] = true;
-  const data: RatingMsgItem = {
+  const data: RatingContentItem = {
     [key]: true,
     unique_id: item['unique_id'],
     idx: idx,
@@ -37,25 +37,25 @@ const handleRating = (item: any, key: string, idx: number) => {
 
 <template>
   <div class="chat-container">
-    <div class="supporter">
-      <img :src="supporterAvatar" />
-      <div class="supporter-content">
+    <div class="counselor">
+      <img :src="counselorAvatar" />
+      <div class="counselor-content">
         <div class="details">
           欢迎来到 <strong>心聆</strong> 树洞实验室，我们用心聆听你的声音。
         </div>
       </div>
     </div>
 
-    <div :class="item.owner" v-for="(item, idx) of history.rawItems" :key="idx">
-      <img :src="item.owner == 'supporter' ? supporterAvatar : seekerAvatar" />
+    <div :class="item.role" v-for="(item, idx) of history.rawItems" :key="idx">
+      <img :src="item.role == 'counselor' ? counselorAvatar : clientAvatar" />
       <div
         :class="
-          item.owner == 'supporter' ? 'supporter-content' : 'seeker-content'
+          item.role == 'counselor' ? 'counselor-content' : 'client-content'
         "
       >
-        <div class="details">{{ item.msg }}</div>
+        <div class="details">{{ item.content }}</div>
         <div
-          v-if="item.owner == 'supporter' && item.msg"
+          v-if="item.role == 'counselor' && item.content"
           style="display: flex; flex-direction: row"
         >
           <div
@@ -154,7 +154,7 @@ const handleRating = (item: any, key: string, idx: number) => {
 }
 .chat-container {
   height: 100%;
-  .supporter {
+  .counselor {
     display: flex;
     flex-direction: row;
     padding: 6px 30px 6px 6px;
@@ -164,7 +164,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       height: 40px;
       border-radius: 20px;
     }
-    .supporter-content {
+    .counselor-content {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -199,7 +199,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       }
     }
   }
-  .seeker {
+  .client {
     display: flex;
     flex-direction: row-reverse;
     img {
@@ -208,7 +208,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       height: 40px;
       border-radius: 20px;
     }
-    .seeker-content {
+    .client-content {
       display: inline-flex;
       flex-flow: column wrap;
       div {
