@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { Toast } from 'vant';
 import axios from 'axios';
+import { ref } from 'vue';
+// import { Picker } from 'vant';
 
 import { useHistoryStore } from '../stores/history';
+import { useModelNameStore } from '../stores/models';
 
 const history = useHistoryStore();
+const modelNameObj = useModelNameStore();
 
-const counselorAvatar = '/images/1.png';
-const clientAvatar = '/images/2.png';
+const assistantAvatar = '/images/assistant.png';
+const userAvatar = '/images/user.png';
 // const URL = '172.16.75.141:8002';
 const URL = 'mechat.westlake.ink:6001';
 
@@ -17,6 +21,20 @@ interface RatingContentItem {
   thumb_down?: boolean;
   idx: number;
 }
+
+const columns = [
+  { text: 'qwen1-5-72b-chat', value: 'qwen1-5-72b-chat' },
+  { text: 'yi-34b-chat', value: 'yi-34b-chat' },
+  { text: 'qwen1-5-7b-chat-sft', value: 'qwen1-5-7b-chat-sft' },
+];
+
+const showPicker = ref(false);
+
+const onConfirm = ({ selectedOptions }: any) => {
+  showPicker.value = false;
+  modelNameObj.modelName = selectedOptions[0].text;
+  console.log(modelNameObj.modelName);
+};
 
 // 点赞和踩赞请求
 const handleRating = (item: any, key: string, idx: number) => {
@@ -37,25 +55,39 @@ const handleRating = (item: any, key: string, idx: number) => {
 
 <template>
   <div class="chat-container">
-    <div class="counselor">
-      <img :src="counselorAvatar" />
-      <div class="counselor-content">
+    <van-field
+      v-model="modelNameObj.modelName"
+      is-link
+      readonly
+      label="模型"
+      placeholder="选择模型"
+      @click="showPicker = true"
+    />
+    <van-popup v-model:show="showPicker" round position="bottom">
+      <van-picker
+        :columns="columns"
+        @cancel="showPicker = false"
+        @confirm="onConfirm"
+      />
+    </van-popup>
+
+    <div class="assistant">
+      <img :src="assistantAvatar" />
+      <div class="assistant-content">
         <div class="details">
-          欢迎来到 <strong>心聆</strong> 树洞实验室，我们用心聆听你的声音。
+          欢迎来到「小天咨询室 」，我们用心聆听你的声音。
         </div>
       </div>
     </div>
 
     <div :class="item.role" v-for="(item, idx) of history.rawItems" :key="idx">
-      <img :src="item.role == 'counselor' ? counselorAvatar : clientAvatar" />
+      <img :src="item.role == 'assistant' ? assistantAvatar : userAvatar" />
       <div
-        :class="
-          item.role == 'counselor' ? 'counselor-content' : 'client-content'
-        "
+        :class="item.role == 'assistant' ? 'assistant-content' : 'user-content'"
       >
         <div class="details">{{ item.content }}</div>
         <div
-          v-if="item.role == 'counselor' && item.content"
+          v-if="item.role == 'assistant' && item.content"
           style="display: flex; flex-direction: row"
         >
           <div
@@ -154,7 +186,7 @@ const handleRating = (item: any, key: string, idx: number) => {
 }
 .chat-container {
   height: 100%;
-  .counselor {
+  .assistant {
     display: flex;
     flex-direction: row;
     padding: 6px 30px 6px 6px;
@@ -164,7 +196,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       height: 40px;
       border-radius: 20px;
     }
-    .counselor-content {
+    .assistant-content {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -199,7 +231,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       }
     }
   }
-  .client {
+  .user {
     display: flex;
     flex-direction: row-reverse;
     img {
@@ -208,7 +240,7 @@ const handleRating = (item: any, key: string, idx: number) => {
       height: 40px;
       border-radius: 20px;
     }
-    .client-content {
+    .user-content {
       display: inline-flex;
       flex-flow: column wrap;
       div {

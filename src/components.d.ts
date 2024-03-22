@@ -13,5 +13,8 @@ declare module '@vue/runtime-core' {
     ChatBox: typeof import('./src/components/ChatBox.vue')['default']
     ChatFooter: typeof import('./src/components/ChatFooter.vue')['default']
     ChatHeader: typeof import('./src/components/ChatHeader.vue')['default']
+    VanField: typeof import('vant/es')['Field']
+    VanPicker: typeof import('vant/es')['Picker']
+    VanPopup: typeof import('vant/es')['Popup']
   }
 }

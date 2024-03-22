@@ -5,9 +5,12 @@ import VantButton from 'vant/lib/button';
 import axios from 'axios';
 
 import { useHistoryStore } from '../stores/history';
+import { useModelNameStore } from '../stores/models';
+
 import { ComputedRef } from 'vue';
 
 const history = useHistoryStore();
+const modelNameObj = useModelNameStore();
 const content = ref('');
 
 const URL = 'mechat.westlake.ink:6001';
@@ -21,23 +24,26 @@ function guid(): string {
 }
 
 // 发送按钮是否可用
-let sendAvailable: ComputedRef<boolean> = computed(() => !content.value.trim());
+let sendAvailable: ComputedRef<boolean> = computed(() => {
+  return !content.value.trim();
+});
 const UNIQUE_ID = guid();
 
 // 消息发送请求
-const sendClientContent = () => {
-  if (sendAvailable) {
+const sendUserContent = () => {
+  if (sendAvailable && !!modelNameObj.modelName.length) {
     // 向后端发送请求的数据
-    const clientData = {
-      role: 'client',
+    const userData = {
+      role: 'user',
       content: content.value.trim(),
       unique_id: UNIQUE_ID,
+      model_name: modelNameObj.modelName,
     };
 
-    history.addItem(clientData);
+    history.addItem(userData);
     content.value = '';
 
-    axios.post(`http://${URL}/v1/chat`, clientData).then((res: any) => {
+    axios.post(`http://${URL}/v1/chat`, userData).then((res: any) => {
       // console.log(res);
       if (res.data.responseCode === 200) {
         history.addItem(res.data.item);
@@ -52,24 +58,24 @@ const sendClientContent = () => {
     <div class="chat-footer-inner">
       <VantField
         v-model="content"
-        @keydown.enter.prevent="sendClientContent"
-        class="client-input"
+        @keydown.enter.prevent="sendUserContent"
+        class="user-input"
         rows="1"
         type="textarea"
-        placeholder="和我聊聊心事吧"
+        placeholder="和我聊聊吧"
         input-align="left"
         maxlength="400"
       />
       <VantButton
         text="发送"
         round
-        class="client-button"
-        @click="sendClientContent"
+        class="user-button"
+        @click="sendUserContent"
         :disabled="sendAvailable"
       ></VantButton>
     </div>
   </div>
-  <div class="footnote">@2023 西湖大学深度学习实验室</div>
+  <div class="footnote">@2024 西湖大学深度学习实验室</div>
 </template>
 
 <style scoped>
@@ -80,13 +86,13 @@ const sendClientContent = () => {
   margin-bottom: 10px;
 }
 
-.client-input {
+.user-input {
   margin: 5px 0 0 5px;
   border-radius: 22px;
   max-height: 40px;
   overflow-y: auto;
 }
-.client-button {
+.user-button {
   font-size: 14px;
   color: #000;
   width: 80px;

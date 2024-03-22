@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 
-import ChatHeader from './ChatHeader.vue';
+// import ChatHeader from './ChatHeader.vue';
 import ChatBox from './ChatBox.vue';
 import ChatFooter from './ChatFooter.vue';
 
@@ -19,9 +19,9 @@ watch(() => history.rawItems.length, updateChatBox, { flush: 'post' });
 
 <template>
   <div class="container">
-    <div class="sub-chat-header">
+    <!-- <div class="sub-chat-header">
       <ChatHeader></ChatHeader>
-    </div>
+    </div> -->
 
     <ChatBox class="sub-chat-box" id="chat"></ChatBox>
 
