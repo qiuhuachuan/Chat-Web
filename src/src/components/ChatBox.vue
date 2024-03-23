@@ -6,13 +6,15 @@ import { ref } from 'vue';
 
 import { useHistoryStore } from '../stores/history';
 import { useModelNameStore } from '../stores/models';
+import { useUniqueIdStore } from '../stores/uuid';
 
 const history = useHistoryStore();
 const modelNameObj = useModelNameStore();
+const uniqueIdObj = useUniqueIdStore();
 
 const assistantAvatar = '/images/assistant.png';
 const userAvatar = '/images/user.png';
-// const URL = '172.16.75.141:8002';
+
 const URL = 'mechat.westlake.ink:6001';
 
 interface RatingContentItem {
@@ -26,6 +28,7 @@ const columns = [
   { text: 'qwen1-5-72b-chat', value: 'qwen1-5-72b-chat' },
   { text: 'yi-34b-chat', value: 'yi-34b-chat' },
   { text: 'qwen1-5-7b-chat-sft', value: 'qwen1-5-7b-chat-sft' },
+  { text: 'gpt-4-1106-preview', value: 'gpt-4-1106-preview' },
 ];
 
 const showPicker = ref(false);
@@ -33,20 +36,27 @@ const showPicker = ref(false);
 const onConfirm = ({ selectedOptions }: any) => {
   showPicker.value = false;
   modelNameObj.modelName = selectedOptions[0].text;
-  console.log(modelNameObj.modelName);
+  history.clearHistory();
+  uniqueIdObj.changeUniqueId();
 };
 
 // 点赞和踩赞请求
 const handleRating = (item: any, key: string, idx: number) => {
   item[key] = true;
-  const data: RatingContentItem = {
+
+  let otherKey = key == 'thumb_up' ? 'thumb_down' : 'thumb_up';
+
+  const ratingData: RatingContentItem = {
     [key]: true,
-    unique_id: item['unique_id'],
+    [otherKey]: false,
+    unique_id: uniqueIdObj.uniqueId,
     idx: idx,
   };
+
   // 向后端提交点赞和踩赞的状态更新
-  axios.post(`http://${URL}/v1/eval`, data).then((res: any) => {
+  axios.post(`http://${URL}/v1/eval`, ratingData).then((res: any) => {
     if (res.data.responseCode != 200) {
+      console.log('here');
       Toast.fail('网络异常，评论失败。');
     }
   });

@@ -6,28 +6,21 @@ import axios from 'axios';
 
 import { useHistoryStore } from '../stores/history';
 import { useModelNameStore } from '../stores/models';
+import { useUniqueIdStore } from '../stores/uuid';
 
 import { ComputedRef } from 'vue';
 
 const history = useHistoryStore();
 const modelNameObj = useModelNameStore();
+const uniqueIdObj = useUniqueIdStore();
 const content = ref('');
 
 const URL = 'mechat.westlake.ink:6001';
-
-function guid(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 // 发送按钮是否可用
 let sendAvailable: ComputedRef<boolean> = computed(() => {
   return !content.value.trim();
 });
-const UNIQUE_ID = guid();
 
 // 消息发送请求
 const sendUserContent = () => {
@@ -36,7 +29,7 @@ const sendUserContent = () => {
     const userData = {
       role: 'user',
       content: content.value.trim(),
-      unique_id: UNIQUE_ID,
+      unique_id: uniqueIdObj.uniqueId,
       model_name: modelNameObj.modelName,
     };
 

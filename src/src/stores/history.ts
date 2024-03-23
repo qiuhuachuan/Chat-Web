@@ -16,6 +16,9 @@ export const useHistoryStore = defineStore({
     addItem(item: Message) {
       this.rawItems.push(item);
     },
+    clearHistory() {
+      this.rawItems = [];
+    },
   },
 });
 
